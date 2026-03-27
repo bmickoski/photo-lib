@@ -62,7 +62,7 @@ describe('PhotoApiService', () => {
       expect(result.length).toBe(1);
       expect(result[0].id).toBe('10');
       expect(result[0].author).toBe('Test Author');
-      expect(result[0].url).toBe('https://picsum.photos/id/10/400/400');
+      expect(result[0].url).toBe('https://picsum.photos/id/10/200/300');
       expect(result[0].width).toBe(2500);
       expect(result[0].height).toBe(1667);
     });
@@ -107,7 +107,7 @@ describe('PhotoApiService', () => {
       await vi.runAllTimersAsync();
 
       expect(result?.id).toBe('10');
-      expect(result?.url).toBe('https://picsum.photos/id/10/400/400');
+      expect(result?.url).toBe('https://picsum.photos/id/10/200/300');
       expect(result?.author).toBe('Test Author');
     });
   });

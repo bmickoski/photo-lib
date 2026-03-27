@@ -5,7 +5,7 @@ import { Photo } from '../core/models/photo.model';
 
 const makePhoto = (id: string): Photo => ({
   id,
-  url: `https://picsum.photos/id/${id}/400/400`,
+  url: `https://picsum.photos/id/${id}/200/300`,
   width: 400,
   height: 400,
   author: `Author ${id}`,
@@ -135,10 +135,10 @@ describe('FavoritesStore', () => {
 
   describe('persistence', () => {
     it('calls storage.set when a photo is added', () => {
-      TestBed.flushEffects();
+      TestBed.tick();
       const callsBefore = storageSpy.set.mock.calls.length;
       store.add(makePhoto('7'));
-      TestBed.flushEffects();
+      TestBed.tick();
       expect(storageSpy.set.mock.calls.length).toBeGreaterThan(callsBefore);
     });
   });

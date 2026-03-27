@@ -7,6 +7,8 @@ const BASE_URL = 'https://picsum.photos';
 const PAGE_SIZE = 12;
 const MIN_DELAY_MS = 200;
 const MAX_DELAY_MS = 300;
+const IMG_WIDTH = 200;
+const IMG_HEIGHT = 300;
 
 interface PicsumPhoto {
   id: string;
@@ -35,7 +37,7 @@ export class PhotoApiService {
         map((items) =>
           items.map((item) => ({
             id: item.id,
-            url: `${BASE_URL}/id/${item.id}/400/400`,
+            url: `${BASE_URL}/id/${item.id}/${IMG_WIDTH}/${IMG_HEIGHT}`,
             width: item.width,
             height: item.height,
             author: item.author,
@@ -49,7 +51,7 @@ export class PhotoApiService {
       delay(randomDelay()),
       map((item) => ({
         id: item.id,
-        url: `${BASE_URL}/id/${item.id}/400/400`,
+        url: `${BASE_URL}/id/${item.id}/${IMG_WIDTH}/${IMG_HEIGHT}`,
         width: item.width,
         height: item.height,
         author: item.author,
