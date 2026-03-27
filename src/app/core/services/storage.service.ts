@@ -20,6 +20,10 @@ export class StorageService {
   }
 
   remove(key: string): void {
-    localStorage.removeItem(key);
+    try {
+      localStorage.removeItem(key);
+    } catch {
+      // private browsing or storage unavailable
+    }
   }
 }

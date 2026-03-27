@@ -83,6 +83,20 @@ describe('PhotoStreamStore', () => {
       expect(store.loading()).toBe(false);
     });
 
+    it('sets error to true on network failure', () => {
+      apiSpy.getPhotos.mockReturnValue(throwError(() => new Error('network')));
+      store.loadMore();
+      expect(store.error()).toBe(true);
+    });
+
+    it('clears error on the next successful loadMore', () => {
+      apiSpy.getPhotos.mockReturnValueOnce(throwError(() => new Error('network')));
+      store.loadMore();
+      apiSpy.getPhotos.mockReturnValue(of(PAGE));
+      store.loadMore();
+      expect(store.error()).toBe(false);
+    });
+
     it('isEmpty is false once photos are loaded', () => {
       store.loadMore();
       expect(store.isEmpty()).toBe(false);
@@ -97,6 +111,14 @@ describe('PhotoStreamStore', () => {
       expect(store.hasMore()).toBe(true);
       expect(store.loading()).toBe(false);
       expect(store.isEmpty()).toBe(true);
+    });
+
+    it('clears error on reset', () => {
+      apiSpy.getPhotos.mockReturnValue(throwError(() => new Error('network')));
+      store.loadMore();
+      expect(store.error()).toBe(true);
+      store.reset();
+      expect(store.error()).toBe(false);
     });
 
     it('allows loading again after reset', () => {
