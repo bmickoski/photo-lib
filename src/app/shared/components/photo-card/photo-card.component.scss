@@ -1,4 +1,10 @@
 .card {
+  // reset button defaults
+  appearance: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+
   position: relative;
   cursor: pointer;
   overflow: hidden;
@@ -10,6 +16,10 @@
   &:hover {
     transform: scale(1.03);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+
+    .hover-overlay {
+      opacity: 1;
+    }
   }
 
   img {
@@ -18,6 +28,28 @@
     object-fit: cover;
     display: block;
   }
+}
+
+.hover-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.38);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+
+  &.view-mode {
+    background: rgba(0, 0, 0, 0.28);
+  }
+}
+
+.overlay-icon {
+  color: #fff;
+  font-size: 2rem;
+  line-height: 1;
+  filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.5));
 }
 
 .favorite-badge {
