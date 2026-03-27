@@ -1,0 +1,12 @@
+.empty-state {
+  text-align: center;
+  margin-top: 4rem;
+  color: #666;
+
+  a {
+    color: var(--mat-sys-primary);
+    font-weight: 500;
+    text-decoration: underline;
+  }
+}
+

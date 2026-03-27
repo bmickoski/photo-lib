@@ -1,0 +1,17 @@
+@if (favStore.count() === 0) {
+  <div class="empty-state">
+    <p>No favorites yet.</p>
+    <p>Go to <a routerLink="/">Photos</a> and click a photo to add it here.</p>
+  </div>
+} @else {
+  <app-photo-grid>
+    @for (photo of favStore.favorites(); track photo.id) {
+      <app-photo-card
+        [photo]="photo"
+        [isFavorite]="true"
+        viewMode="view"
+        (cardClicked)="openPhoto($event)"
+      />
+    }
+  </app-photo-grid>
+}

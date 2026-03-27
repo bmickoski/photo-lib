@@ -1,0 +1,21 @@
+.scroll-sentinel {
+  min-height: 1px;
+}
+
+.scroll-top-btn {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 50;
+  opacity: 0.85;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.empty-msg {
+  text-align: center;
+  color: #888;
+  margin-top: 3rem;
+}

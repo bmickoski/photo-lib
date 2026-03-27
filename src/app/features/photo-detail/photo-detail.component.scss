@@ -1,0 +1,58 @@
+.detail-wrap {
+  position: relative;
+  height: calc(100dvh - var(--mat-toolbar-standard-height, 64px));
+  background: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.full-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+// Back button floats top-left over the image
+.top-bar {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 10;
+
+  button {
+    color: #fff;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+  }
+}
+
+// Actions float bottom-center with gradient so text stays readable
+.actions {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 1.5rem 1rem 1rem;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.65));
+  z-index: 10;
+}
+
+.author {
+  color: #ddd;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.not-found {
+  text-align: center;
+  margin-top: 4rem;
+  color: #888;
+}

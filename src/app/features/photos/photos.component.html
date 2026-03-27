@@ -1,0 +1,40 @@
+<app-photo-grid>
+  @for (photo of stream.photos(); track photo.id) {
+    <app-photo-card
+      [photo]="photo"
+      [isFavorite]="favStore.isFavorite(photo.id)"
+      (cardClicked)="addToFavorites($event)"
+    />
+  }
+</app-photo-grid>
+
+@if (stream.loading()) {
+  <app-loader />
+}
+
+@if (stream.error()) {
+  <p class="error-msg">Failed to load photos. Scroll down to retry.</p>
+}
+
+@if (stream.isEmpty()) {
+  <p class="empty-msg">No photos found.</p>
+}
+
+@if (stream.hasMore() && !stream.loading()) {
+  <div
+    class="scroll-sentinel"
+    appInfiniteScroll
+    (scrolled)="stream.loadMore()"
+  ></div>
+}
+
+@if (showScrollTop()) {
+  <button
+    mat-mini-fab
+    class="scroll-top-btn"
+    aria-label="Back to top"
+    (click)="scrollToTop()"
+  >
+    <mat-icon>arrow_upward</mat-icon>
+  </button>
+}
