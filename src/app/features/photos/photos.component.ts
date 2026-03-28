@@ -26,6 +26,7 @@ export class PhotosComponent implements OnInit {
   protected readonly stream = inject(PhotoStreamStore);
   protected readonly favStore = inject(FavoritesStore);
   readonly showScrollTop = signal(false);
+  readonly skeletons = Array.from({ length: 12 });
   readonly #snackBar = inject(MatSnackBar);
 
   readonly #destroyRef = inject(DestroyRef);
