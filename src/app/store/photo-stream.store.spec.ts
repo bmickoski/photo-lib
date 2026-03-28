@@ -103,30 +103,4 @@ describe('PhotoStreamStore', () => {
     });
   });
 
-  describe('reset', () => {
-    it('clears photos and resets page/state', () => {
-      store.loadMore();
-      store.reset();
-      expect(store.photos()).toEqual([]);
-      expect(store.hasMore()).toBe(true);
-      expect(store.loading()).toBe(false);
-      expect(store.isEmpty()).toBe(true);
-    });
-
-    it('clears error on reset', () => {
-      apiSpy.getPhotos.mockReturnValue(throwError(() => new Error('network')));
-      store.loadMore();
-      expect(store.error()).toBe(true);
-      store.reset();
-      expect(store.error()).toBe(false);
-    });
-
-    it('allows loading again after reset', () => {
-      apiSpy.getPhotos.mockReturnValue(of([]));
-      store.loadMore(); // sets hasMore = false
-      store.reset();
-      store.loadMore();
-      expect(apiSpy.getPhotos).toHaveBeenCalledTimes(2);
-    });
-  });
 });

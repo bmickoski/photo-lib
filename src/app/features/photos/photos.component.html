@@ -13,7 +13,10 @@
 }
 
 @if (stream.error()) {
-  <p class="error-msg">Failed to load photos. Scroll down to retry.</p>
+  <div class="error-msg">
+    <p>Failed to load photos.</p>
+    <button mat-stroked-button (click)="stream.loadMore()">Try again</button>
+  </div>
 }
 
 @if (stream.isEmpty()) {

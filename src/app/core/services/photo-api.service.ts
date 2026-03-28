@@ -5,10 +5,6 @@ import { Photo } from '../models/photo.model';
 
 const BASE_URL = 'https://picsum.photos';
 const PAGE_SIZE = 12;
-const MIN_DELAY_MS = 200;
-const MAX_DELAY_MS = 300;
-const IMG_WIDTH = 200;
-const IMG_HEIGHT = 300;
 
 interface PicsumPhoto {
   id: string;
@@ -17,10 +13,6 @@ interface PicsumPhoto {
   height: number;
   url: string;
   download_url: string;
-}
-
-function randomDelay(): number {
-  return MIN_DELAY_MS + Math.floor(Math.random() * (MAX_DELAY_MS - MIN_DELAY_MS + 1));
 }
 
 @Injectable({ providedIn: 'root' })
@@ -33,29 +25,24 @@ export class PhotoApiService {
         params: { page: page.toString(), limit: PAGE_SIZE.toString() },
       })
       .pipe(
-        delay(randomDelay()),
-        map((items) =>
-          items.map((item) => ({
-            id: item.id,
-            url: `${BASE_URL}/id/${item.id}/${IMG_WIDTH}/${IMG_HEIGHT}`,
-            width: item.width,
-            height: item.height,
-            author: item.author,
-          })),
-        ),
+        delay(Math.random() * 100 + 200),
+        map((items) => items.map(this.#toPhoto)),
       );
   }
 
   getPhotoById(id: string): Observable<Photo> {
-    return this.#http.get<PicsumPhoto>(`${BASE_URL}/id/${id}/info`).pipe(
-      delay(randomDelay()),
-      map((item) => ({
-        id: item.id,
-        url: `${BASE_URL}/id/${item.id}/${IMG_WIDTH}/${IMG_HEIGHT}`,
-        width: item.width,
-        height: item.height,
-        author: item.author,
-      })),
-    );
+    return this.#http
+      .get<PicsumPhoto>(`${BASE_URL}/id/${id}/info`)
+      .pipe(delay(Math.random() * 100 + 200), map(this.#toPhoto));
+  }
+
+  #toPhoto(item: PicsumPhoto): Photo {
+    return {
+      id: item.id,
+      url: `${BASE_URL}/id/${item.id}/200/300`,
+      width: item.width,
+      height: item.height,
+      author: item.author,
+    };
   }
 }

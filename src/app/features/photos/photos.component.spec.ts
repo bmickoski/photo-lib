@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { PhotosComponent } from './photos.component';
 import { PhotoStreamStore } from '../../store/photo-stream.store';
 import { FavoritesStore } from '../../store/favorites.store';
@@ -52,6 +53,7 @@ describe('PhotosComponent', () => {
         provideRouter([]),
         { provide: PhotoStreamStore, useValue: streamStore },
         { provide: FavoritesStore, useValue: favStore },
+        { provide: MatSnackBar, useValue: { open: vi.fn() } },
       ],
     }).compileComponents();
   });
@@ -77,6 +79,13 @@ describe('PhotosComponent', () => {
     const fixture = TestBed.createComponent(PhotosComponent);
     fixture.componentInstance.addToFavorites(PHOTO);
     expect(favStore.add).toHaveBeenCalledWith(PHOTO);
+  });
+
+  it('shows a snackbar after adding to favorites', () => {
+    const snackBar = TestBed.inject(MatSnackBar);
+    const fixture = TestBed.createComponent(PhotosComponent);
+    fixture.componentInstance.addToFavorites(PHOTO);
+    expect(snackBar.open).toHaveBeenCalledWith('Added to favorites', undefined, { duration: 2000 });
   });
 
   it('showScrollTop is false initially', () => {

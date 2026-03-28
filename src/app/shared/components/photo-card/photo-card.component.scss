@@ -48,7 +48,8 @@
 .overlay-icon {
   color: #fff;
   font-size: 2rem;
-  line-height: 1;
+  width: 2rem;
+  height: 2rem;
   filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.5));
 }
 
@@ -58,5 +59,7 @@
   right: 8px;
   color: #e53935;
   font-size: 1.2rem;
+  width: 1.2rem;
+  height: 1.2rem;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 }

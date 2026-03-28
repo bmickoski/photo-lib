@@ -5,6 +5,7 @@ import { fromEvent } from 'rxjs';
 import { throttleTime } from 'rxjs/operators';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { PhotoStreamStore } from '../../store/photo-stream.store';
 import { FavoritesStore } from '../../store/favorites.store';
 import { PhotoGridComponent } from '../../shared/components/photo-grid/photo-grid.component';
@@ -25,6 +26,7 @@ export class PhotosComponent implements OnInit {
   protected readonly stream = inject(PhotoStreamStore);
   protected readonly favStore = inject(FavoritesStore);
   readonly showScrollTop = signal(false);
+  readonly #snackBar = inject(MatSnackBar);
 
   readonly #destroyRef = inject(DestroyRef);
   readonly #title = inject(Title);
@@ -40,18 +42,19 @@ export class PhotosComponent implements OnInit {
         throttleTime(100, undefined, { leading: true, trailing: true }),
         takeUntilDestroyed(this.#destroyRef),
       )
-      .subscribe(() => this.showScrollTop.set(window.scrollY > 300));
-  }
-
-  scrollToTop(): void {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+      .subscribe(() => this.onScroll());
   }
 
   onScroll(): void {
     this.showScrollTop.set(window.scrollY > 300);
   }
 
+  scrollToTop(): void {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
   addToFavorites(photo: Photo): void {
     this.favStore.add(photo);
+    this.#snackBar.open('Added to favorites', undefined, { duration: 2000 });
   }
 }

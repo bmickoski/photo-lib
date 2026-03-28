@@ -4,7 +4,6 @@ mat-toolbar {
   position: sticky;
   top: 0;
   z-index: 100;
-  // M3 no longer auto-applies primary bg from color="primary" on toolbar
   background-color: var(--mat-sys-primary) !important;
   color: var(--mat-sys-on-primary) !important;
 }
@@ -18,13 +17,11 @@ nav {
   display: flex;
   gap: 0.5rem;
 
-  // mat-button resets color — force it to inherit from the toolbar
   a[mat-button] {
     color: var(--mat-sys-on-primary);
   }
 }
 
-// Underline is more readable than a translucent bg pill when toolbar color can vary
 .nav-active {
   border-bottom: 2px solid var(--mat-sys-on-primary);
   border-radius: 0;

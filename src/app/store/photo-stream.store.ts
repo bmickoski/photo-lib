@@ -1,5 +1,4 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { Subscription } from 'rxjs';
 import { Photo } from '../core/models/photo.model';
 import { PhotoApiService } from '../core/services/photo-api.service';
 
@@ -13,9 +12,6 @@ export class PhotoStreamStore {
   readonly #hasMore = signal(true);
   readonly #error = signal(false);
 
-  // cancel in-flight request when reset() or a duplicate call races
-  #pendingSub: Subscription | null = null;
-
   readonly photos = this.#photos.asReadonly();
   readonly loading = this.#loading.asReadonly();
   readonly hasMore = this.#hasMore.asReadonly();
@@ -28,12 +24,12 @@ export class PhotoStreamStore {
     this.#loading.set(true);
     this.#error.set(false);
 
-    this.#pendingSub = this.#api.getPhotos(this.#page()).subscribe({
-      next: (incoming) => {
-        if (incoming.length === 0) {
+    this.#api.getPhotos(this.#page()).subscribe({
+      next: (photos) => {
+        if (photos.length === 0) {
           this.#hasMore.set(false);
         } else {
-          this.#photos.update((current) => [...current, ...incoming]);
+          this.#photos.update((current) => [...current, ...photos]);
           this.#page.update((p) => p + 1);
         }
         this.#loading.set(false);
@@ -45,13 +41,4 @@ export class PhotoStreamStore {
     });
   }
 
-  reset(): void {
-    this.#pendingSub?.unsubscribe();
-    this.#pendingSub = null;
-    this.#photos.set([]);
-    this.#page.set(1);
-    this.#hasMore.set(true);
-    this.#loading.set(false);
-    this.#error.set(false);
-  }
 }

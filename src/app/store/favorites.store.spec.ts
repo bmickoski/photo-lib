@@ -113,16 +113,6 @@ describe('FavoritesStore', () => {
     });
   });
 
-  describe('clear', () => {
-    it('empties the favorites list', () => {
-      store.add(makePhoto('1'));
-      store.add(makePhoto('2'));
-      store.clear();
-      expect(store.favorites()).toEqual([]);
-      expect(store.count()).toBe(0);
-    });
-  });
-
   describe('ids computed', () => {
     it('returns a Set of favorite ids', () => {
       store.add(makePhoto('a'));

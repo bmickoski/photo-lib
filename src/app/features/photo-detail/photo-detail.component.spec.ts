@@ -8,7 +8,7 @@ import { PhotoDetailComponent } from './photo-detail.component';
 import { FavoritesStore } from '../../store/favorites.store';
 import { PhotoApiService } from '../../core/services/photo-api.service';
 import { Photo } from '../../core/models/photo.model';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { ComponentFixture } from '@angular/core/testing';
 
 const PHOTO: Photo = { id: '42', url: 'https://picsum.photos/id/42/200/300', width: 200, height: 300, author: 'Test' };
@@ -118,5 +118,15 @@ describe('PhotoDetailComponent', () => {
     const backSpy = vi.spyOn(location, 'back').mockImplementation(() => {});
     fixture.componentInstance.goBack();
     expect(backSpy).toHaveBeenCalled();
+  });
+
+  it('sets error signal when API call fails', () => {
+    favStore = makeFavStore([]);
+    apiSpy.getPhotoById.mockReturnValue(throwError(() => new Error('network')));
+    TestBed.overrideProvider(FavoritesStore, { useValue: favStore });
+    TestBed.overrideProvider(PhotoApiService, { useValue: apiSpy });
+    const fixture = createFixture();
+    fixture.detectChanges();
+    expect(fixture.componentInstance.error()).toBe(true);
   });
 });
