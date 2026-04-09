@@ -14,6 +14,8 @@ export class FavoritesStore {
   readonly ids = computed(() => new Set(this.#favorites().map((p) => p.id)));
 
   constructor() {
+    // Photo only contains id, url, author - storing the full object is intentional,
+    // no reconstruction logic needed here
     effect(() => {
       this.#storage.set(STORAGE_KEY, this.#favorites());
     });

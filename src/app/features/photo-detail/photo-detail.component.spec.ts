@@ -11,7 +11,7 @@ import { Photo } from '../../core/models/photo.model';
 import { of, throwError } from 'rxjs';
 import { ComponentFixture } from '@angular/core/testing';
 
-const PHOTO: Photo = { id: '42', url: 'https://picsum.photos/id/42/200/300', width: 200, height: 300, author: 'Test' };
+const PHOTO: Photo = { id: '42', url: 'https://picsum.photos/id/42/200/300', fullUrl: 'https://picsum.photos/id/42/1920/1280', author: 'Test' };
 
 function makeFavStore(photos: Photo[] = []) {
   const list = signal(photos);
@@ -64,7 +64,7 @@ describe('PhotoDetailComponent', () => {
     fixture.detectChanges();
     const img = fixture.nativeElement.querySelector('img.full-photo') as HTMLImageElement;
     expect(img).toBeTruthy();
-    expect(img.src).toContain('picsum.photos/id/42/200/300');
+    expect(img.src).toContain('picsum.photos/id/42/1920/1280');
   });
 
   it('shows Remove button when photo is a favorite', () => {

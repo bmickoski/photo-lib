@@ -7,8 +7,7 @@ import { Photo } from '../core/models/photo.model';
 const makePhoto = (id: string): Photo => ({
   id,
   url: `https://picsum.photos/id/${id}/200/300`,
-  width: 400,
-  height: 400,
+  fullUrl: `https://picsum.photos/id/${id}/1920/1280`,
   author: `Author ${id}`,
 });
 
@@ -19,6 +18,8 @@ describe('PhotoStreamStore', () => {
   let apiSpy: { getPhotos: ReturnType<typeof vi.fn> };
 
   beforeEach(() => {
+    // Pin Math.random to 0 so the random start page is always 1 (0 * 80 + 1).
+    vi.spyOn(Math, 'random').mockReturnValue(0);
     apiSpy = { getPhotos: vi.fn().mockReturnValue(of(PAGE)) };
 
     TestBed.configureTestingModule({
@@ -28,6 +29,8 @@ describe('PhotoStreamStore', () => {
     store = TestBed.inject(PhotoStreamStore);
   });
 
+  afterEach(() => vi.restoreAllMocks());
+
   it('starts empty and not loading', () => {
     expect(store.photos()).toEqual([]);
     expect(store.loading()).toBe(false);
@@ -36,13 +39,13 @@ describe('PhotoStreamStore', () => {
   });
 
   describe('loadMore', () => {
-    it('appends photos and advances the page', () => {
+    it('appends photos and clears loading', () => {
       store.loadMore();
       expect(store.photos()).toEqual(PAGE);
       expect(store.loading()).toBe(false);
     });
 
-    it('calls the API with the current page number', () => {
+    it('calls the API with incrementing page numbers', () => {
       store.loadMore();
       expect(apiSpy.getPhotos).toHaveBeenCalledWith(1);
       store.loadMore();
@@ -61,23 +64,15 @@ describe('PhotoStreamStore', () => {
       expect(store.hasMore()).toBe(false);
     });
 
-    it('does not call API again when already loading', () => {
-      // simulate in-flight request by calling loadMore with a never-resolving observable
-      apiSpy.getPhotos.mockReturnValue(of(PAGE));
-      store.loadMore();
-      store.loadMore(); // second call while technically already done — but page check works
-      expect(apiSpy.getPhotos).toHaveBeenCalledTimes(2);
-    });
-
     it('does not call API when hasMore is false', () => {
       apiSpy.getPhotos.mockReturnValue(of([]));
-      store.loadMore(); // sets hasMore = false
+      store.loadMore();
       apiSpy.getPhotos.mockClear();
       store.loadMore();
       expect(apiSpy.getPhotos).not.toHaveBeenCalled();
     });
 
-    it('recovers from API error — loading resets to false', () => {
+    it('recovers from API error - loading resets to false', () => {
       apiSpy.getPhotos.mockReturnValue(throwError(() => new Error('network')));
       store.loadMore();
       expect(store.loading()).toBe(false);
@@ -101,6 +96,19 @@ describe('PhotoStreamStore', () => {
       store.loadMore();
       expect(store.isEmpty()).toBe(false);
     });
-  });
 
+    it('start page shifts with Math.random - different sessions begin at different pages', () => {
+      vi.restoreAllMocks();
+      vi.spyOn(Math, 'random').mockReturnValue(0.5); // 0.5 * 80 + 1 = 41
+
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [{ provide: PhotoApiService, useValue: apiSpy }],
+      });
+      const freshStore = TestBed.inject(PhotoStreamStore);
+
+      freshStore.loadMore();
+      expect(apiSpy.getPhotos).toHaveBeenCalledWith(41);
+    });
+  });
 });

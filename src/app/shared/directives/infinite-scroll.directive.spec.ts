@@ -9,7 +9,7 @@ let capturedCallback: ObserverCallback | null = null;
 const observeSpy = vi.fn();
 const disconnectSpy = vi.fn();
 
-// Must be a real class — arrow functions can't be called with `new`
+// Must be a real class - arrow functions can't be called with `new`
 class MockIntersectionObserver {
   constructor(cb: ObserverCallback) {
     capturedCallback = cb;
@@ -46,6 +46,8 @@ describe('InfiniteScrollDirective', () => {
   function setup() {
     const fixture = TestBed.createComponent(TestHostComponent);
     fixture.detectChanges();
+    // fire the initial callback that marks the observer as ready (skipped internally)
+    capturedCallback!([{ isIntersecting: false } as IntersectionObserverEntry]);
     return {
       fixture,
       host: fixture.componentInstance,

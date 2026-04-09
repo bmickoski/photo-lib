@@ -1,7 +1,6 @@
 export interface Photo {
   id: string;
   url: string;
-  width: number;
-  height: number;
+  fullUrl: string;
   author: string;
 }
